@@ -15,6 +15,179 @@
         <vm:MainWindowViewModel/>
     </Design.DataContext>
 
-    <TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+    <Border BorderBrush="Gray"
+            BorderThickness="1"
+            Margin="10"
+            Padding="10">
 
+        <Grid DataContext="{Binding TasksViewModel}"
+              RowDefinitions="Auto, *, Auto"
+              RowSpacing="10">
+
+            <!-- Верхняя панель -->
+            <Border Grid.Row="0"
+                    BorderBrush="Gray"
+                    BorderThickness="1"
+                    Padding="10">
+
+                <StackPanel Orientation="Horizontal"
+                            Spacing="10">
+
+                    <TextBlock Text="Filter:"
+                               VerticalAlignment="Center"/>
+
+                    <ComboBox Width="160"
+                              ItemsSource="{Binding AvailableFilters}"
+                              SelectedItem="{Binding SelectedFilter}"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Центр: список + карточка -->
+            <Grid Grid.Row="1"
+                  ColumnDefinitions="250, *"
+                  ColumnSpacing="10">
+
+                <!-- Список задач -->
+                <Border Grid.Column="0"
+                        BorderBrush="Gray"
+                        BorderThickness="1"
+                        Padding="10">
+
+                    <Grid RowDefinitions="Auto, *"
+                          RowSpacing="10">
+
+                        <TextBlock Grid.Row="0"
+                                   Text="Tasks:"
+                                   FontWeight="Bold"/>
+
+                        <ListBox Grid.Row="1"
+                                 ItemsSource="{Binding FilteredTasks}"
+                                 SelectedItem="{Binding SelectedTask}">
+
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Spacing="4">
+                                        <TextBlock Text="{Binding Title}"/>
+                                        <TextBlock Text="{Binding Priority}"
+                                                   FontSize="12"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+
+                        </ListBox>
+                    </Grid>
+                </Border>
+
+                <!-- Карточка выбранной задачи -->
+                <Border Grid.Column="1"
+                        BorderBrush="Gray"
+                        BorderThickness="1"
+                        Padding="10">
+
+                    <Grid>
+                        <TextBlock Text="Choose task"
+                                   IsVisible="{Binding !HasSelectedTask}"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"/>
+
+                        <Grid IsVisible="{Binding HasSelectedTask}"
+                              RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto"
+                              ColumnDefinitions="Auto, *"
+                              RowSpacing="10"
+                              ColumnSpacing="10">
+
+                            <TextBlock Grid.Row="0"
+                                       Grid.Column="0"
+                                       Text="Title:"
+                                       VerticalAlignment="Center"/>
+
+                            <TextBox Grid.Row="0"
+                                     Grid.Column="1"
+                                     Text="{Binding SelectedTask.Title}"/>
+
+                            <TextBlock Grid.Row="1"
+                                       Grid.Column="0"
+                                       Text="Description:"
+                                       VerticalAlignment="Center"/>
+
+                            <TextBox Grid.Row="1"
+                                     Grid.Column="1"
+                                     Text="{Binding SelectedTask.Description}"/>
+
+                            <TextBlock Grid.Row="2"
+                                       Grid.Column="0"
+                                       Text="Done:"
+                                       VerticalAlignment="Center"/>
+
+                            <CheckBox Grid.Row="2"
+                                      Grid.Column="1"
+                                      IsChecked="{Binding SelectedTask.IsDone}"/>
+
+                            <TextBlock Grid.Row="3"
+                                       Grid.Column="0"
+                                       Text="Priority:"
+                                       VerticalAlignment="Center"/>
+
+                            <ComboBox Grid.Row="3"
+                                      Grid.Column="1"
+                                      ItemsSource="{Binding AvailablePriorities}"
+                                      SelectedItem="{Binding SelectedTask.Priority}"/>
+
+                            <TextBlock Grid.Row="4"
+                                       Grid.Column="0"
+                                       Text="Due date:"
+                                       VerticalAlignment="Center"/>
+
+                            <DatePicker Grid.Row="4"
+                                        Grid.Column="1"
+                                        SelectedDate="{Binding SelectedTask.DueDate}"/>
+
+                            <TextBlock Grid.Row="5"
+                                       Grid.Column="0"
+                                       Text="Created:"
+                                       VerticalAlignment="Center"/>
+
+                            <TextBlock Grid.Row="5"
+                                       Grid.Column="1"
+                                       Text="{Binding SelectedTask.CreatedAt}"
+                                       VerticalAlignment="Center"/>
+                        </Grid>
+                    </Grid>
+                </Border>
+            </Grid>
+
+            <!-- Нижняя панель -->
+            <Border Grid.Row="2"
+                    BorderBrush="Gray"
+                    BorderThickness="1"
+                    Padding="10">
+
+                <StackPanel Spacing="8">
+
+                    <StackPanel Orientation="Horizontal"
+                                Spacing="10">
+
+                        <TextBlock Text="New task:"
+                                   VerticalAlignment="Center"/>
+
+                        <TextBox Width="250"
+                                 Text="{Binding NewTaskTitle, Mode=TwoWay}"/>
+
+                        <Button Content="Add"
+                                Command="{Binding AddTaskCommand}"/>
+
+                        <Button Content="Delete"
+                                Command="{Binding DeleteTaskCommand}"/>
+
+                        <Button Content="Mark as done"
+                                Command="{Binding MarkAsDoneCommand}"/>
+                    </StackPanel>
+
+                    <TextBlock Text="{Binding NewTaskTitleError}"
+                               IsVisible="{Binding HasNewTaskTitleError}"
+                               Foreground="Red"/>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </Border>
 </Window>
